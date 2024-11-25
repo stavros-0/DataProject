@@ -124,4 +124,27 @@ JOIN DataProject.dbo.CovidVaccinations vac
     AND dea.date = vac.date
 WHERE dea.continent IS NOT NULL
 
- 
+ -- Queries for tableau
+ SELECT SUM(new_cases) AS TOTAL_CASES, sum(new_deaths) AS TOTAL_DEATHS, 
+    CAST(CAST(sum(new_deaths) AS FLOAT)/ CAST(sum(new_cases)AS FLOAT)*100 AS FLOAT) as DeathPercentage
+FROM DataProject.dbo.CovidDeaths
+WHERE continent IS NOT NULL
+ORDER BY 1,2
+
+SELECT location, sum(new_deaths) AS TOTAL_DEATHS
+FROM DataProject.dbo.CovidDeaths
+WHERE continent IS NULL
+    AND location not in ('World', 'European Union', 'International')
+GROUP BY location
+ORDER BY TOTAL_DEATHS DESC
+
+SELECT location, population, MAX(total_cases) AS HighestInfectionCount, 
+    MAX((total_cases/population))*100 AS PercentPopulationInfected
+FROM DataProject.dbo.CovidDeaths
+GROUP BY location, population
+ORDER BY PercentPopulationInfected DESC
+
+SELECT location, population, date, max(total_cases) as HighestInfectionCount, MAX((total_cases/population))*100 as PercentPopulationInfected
+FROM DataProject.dbo.CovidDeaths
+GROUP BY location, population, date
+ORDER BY PercentPopulationInfected DESC

@@ -139,12 +139,13 @@ GROUP BY location
 ORDER BY TOTAL_DEATHS DESC
 
 SELECT location, population, MAX(total_cases) AS HighestInfectionCount, 
-    MAX((total_cases/population))*100 AS PercentPopulationInfected
+    MAX(CAST(total_cases AS FLOAT) / population) * 100 AS PercentPopulationInfected
 FROM DataProject.dbo.CovidDeaths
 GROUP BY location, population
 ORDER BY PercentPopulationInfected DESC
 
-SELECT location, population, date, max(total_cases) as HighestInfectionCount, MAX((total_cases/population))*100 as PercentPopulationInfected
+SELECT location, population, date, max(total_cases) as HighestInfectionCount, 
+    MAX(CAST(total_cases AS FLOAT) / population) * 100 as PercentPopulationInfected
 FROM DataProject.dbo.CovidDeaths
 GROUP BY location, population, date
 ORDER BY PercentPopulationInfected DESC
